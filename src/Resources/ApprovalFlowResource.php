@@ -66,7 +66,7 @@ class ApprovalFlowResource extends Resource
                             ->rows(2),
                         Select::make('approvable_type')
                             ->label(__('filament-approval::approval.flow.applies_to'))
-                            ->options(fn() => static::getApprovableModels())
+                            ->options(fn () => static::getApprovableModels())
                             ->placeholder(__('filament-approval::approval.flow.any_model'))
                             ->searchable()
                             ->helperText(__('filament-approval::approval.flow.applies_to_helper')),
@@ -82,7 +82,7 @@ class ApprovalFlowResource extends Resource
                             ->label(__('filament-approval::approval.flow_table.steps'))
                             ->relationship()
                             ->orderColumn('order')
-                            ->schema(fn() => [
+                            ->schema(fn () => [
                                 TextInput::make('name')
                                     ->label(__('filament-approval::approval.flow.step_name'))
                                     ->required()
@@ -97,7 +97,7 @@ class ApprovalFlowResource extends Resource
                                 Select::make('approver_resolver')
                                     ->label(__('filament-approval::approval.flow.approver_type'))
                                     ->options(collect($resolvers)->mapWithKeys(
-                                        fn(string $class) => [$class => $class::label()]
+                                        fn (string $class) => [$class => $class::label()]
                                     ))
                                     ->searchable()
                                     ->required()
@@ -111,12 +111,12 @@ class ApprovalFlowResource extends Resource
                                     ->numeric()
                                     ->default(1)
                                     ->minValue(1)
-                                    ->visible(fn(Get $get): bool => $get('type') === 'parallel')
+                                    ->visible(fn (Get $get): bool => $get('type') === 'parallel')
                                     ->helperText(function (Get $get): ?string {
                                         $config = [];
 
                                         foreach (['user_ids', 'admin_ids', 'role', 'callback'] as $key) {
-                                            $value = $get('approver_config.' . $key);
+                                            $value = $get('approver_config.'.$key);
 
                                             if ($value !== null) {
                                                 $config[$key] = $value;
@@ -151,7 +151,7 @@ class ApprovalFlowResource extends Resource
                                 Select::make('escalation_action')
                                     ->label(__('filament-approval::approval.flow.escalation_action'))
                                     ->options(EscalationAction::class)
-                                    ->visible(fn(Get $get): bool => filled($get('sla_hours')))
+                                    ->visible(fn (Get $get): bool => filled($get('sla_hours')))
                                     ->searchable(),
                             ])
                             ->columns(2)
@@ -189,7 +189,7 @@ class ApprovalFlowResource extends Resource
 
             $groups[] = Group::make()
                 ->schema($fields)
-                ->visible(fn(Get $get): bool => $get('approver_resolver') === $resolverClass)
+                ->visible(fn (Get $get): bool => $get('approver_resolver') === $resolverClass)
                 ->columnSpan(2);
         }
 
@@ -254,7 +254,7 @@ class ApprovalFlowResource extends Resource
                 TextColumn::make('approvable_type')
                     ->label(__('filament-approval::approval.flow_table.model'))
                     ->placeholder(__('filament-approval::approval.flow_table.any'))
-                    ->formatStateUsing(fn(?string $state): string => $state ? class_basename($state) : __('filament-approval::approval.flow_table.any')),
+                    ->formatStateUsing(fn (?string $state): string => $state ? class_basename($state) : __('filament-approval::approval.flow_table.any')),
                 TextColumn::make('steps_count')
                     ->counts('steps')
                     ->label(__('filament-approval::approval.flow_table.steps')),

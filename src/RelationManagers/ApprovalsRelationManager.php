@@ -16,6 +16,7 @@ use Wezlo\FilamentApproval\Models\Approval;
 class ApprovalsRelationManager extends RelationManager
 {
     protected static string $relationship = 'approvals';
+
     protected static bool $isLazy = false;
 
     public static function getTitle($ownerRecord = null, ?string $pageClass = null): string

@@ -64,10 +64,10 @@ class DelegateAction extends Action
                     $data['reason'] ?? null,
                 );
 
-                Notification::make()
-                    ->title(__('filament-approval::approval.actions.delegated_success'))
-                    ->success()
-                    ->send();
+                // Notification::make()
+                //     ->title(__('filament-approval::approval.actions.delegated_success'))
+                //     ->success()
+                //     ->send();
             })
             ->requiresConfirmation();
     }

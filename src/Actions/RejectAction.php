@@ -56,10 +56,10 @@ class RejectAction extends Action
                     $data['comment'],
                 );
 
-                Notification::make()
-                    ->title(__('filament-approval::approval.actions.rejected_success'))
-                    ->danger()
-                    ->send();
+                // Notification::make()
+                //     ->title(__('filament-approval::approval.actions.rejected_success'))
+                //     ->danger()
+                //     ->send();
             })
             ->requiresConfirmation()
             ->modalHeading(__('filament-approval::approval.actions.reject_heading'));

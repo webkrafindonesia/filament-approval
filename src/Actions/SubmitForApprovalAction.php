@@ -67,10 +67,10 @@ class SubmitForApprovalAction extends Action
                     $data['comment'] ?? null,
                 );
 
-                Notification::make()
-                    ->title(__('filament-approval::approval.actions.submitted_success'))
-                    ->success()
-                    ->send();
+                // Notification::make()
+                //     ->title(__('filament-approval::approval.actions.submitted_success'))
+                //     ->success()
+                //     ->send();
             })
             ->requiresConfirmation();
     }

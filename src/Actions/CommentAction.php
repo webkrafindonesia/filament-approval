@@ -58,10 +58,10 @@ class CommentAction extends Action
                     $stepInstance,
                 );
 
-                Notification::make()
-                    ->title(__('filament-approval::approval.actions.comment_success'))
-                    ->success()
-                    ->send();
+                // Notification::make()
+                //     ->title(__('filament-approval::approval.actions.comment_success'))
+                //     ->success()
+                //     ->send();
             });
     }
 }

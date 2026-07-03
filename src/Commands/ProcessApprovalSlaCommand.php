@@ -46,7 +46,7 @@ class ProcessApprovalSlaCommand extends Command
                 $instance->update(['sla_warning_sent' => true]);
 
                 foreach ($instance->assigned_approver_ids as $userId) {
-                    ApprovalSlaWarningNotification::send($instance, $userId);
+                    // ApprovalSlaWarningNotification::send($instance, $userId);
                 }
             }
         }
@@ -122,14 +122,14 @@ class ProcessApprovalSlaCommand extends Command
         ]);
 
         foreach ($newApproverIds as $userId) {
-            ApprovalRequestedNotification::send($instance, $userId);
+            // ApprovalRequestedNotification::send($instance, $userId);
         }
     }
 
     protected function sendEscalationNotification(ApprovalStepInstance $instance): void
     {
         foreach ($instance->assigned_approver_ids as $userId) {
-            ApprovalEscalatedNotification::send($instance, $userId);
+            // ApprovalEscalatedNotification::send($instance, $userId);
         }
     }
 }

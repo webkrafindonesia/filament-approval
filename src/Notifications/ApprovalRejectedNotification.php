@@ -11,22 +11,22 @@ class ApprovalRejectedNotification
 {
     public static function send(Approval $approval, string|int $userId): void
     {
-        $userModel = FilamentApprovalPlugin::resolveUserModel();
-        $recipient = $userModel::find($userId);
-
-        if (! $recipient) {
-            return;
-        }
-
-        $approvable = $approval->approvable;
-        $modelLabel = class_basename($approvable);
-
-        Notification::make()
-            ->title(__('filament-approval::approval.notifications.rejected_title'))
-            ->body(__('filament-approval::approval.notifications.rejected_body', ['model' => $modelLabel, 'id' => $approvable->getKey()]))
-            ->icon(Heroicon::OutlinedXCircle)
-            ->danger()
-            ->broadcast($recipient)
-            ->sendToDatabase($recipient);
+        // $userModel = FilamentApprovalPlugin::resolveUserModel();
+        // $recipient = $userModel::find($userId);
+        //
+        // if (! $recipient) {
+        //     return;
+        // }
+        //
+        // $approvable = $approval->approvable;
+        // $modelLabel = class_basename($approvable);
+        //
+        // Notification::make()
+        //     ->title(__('filament-approval::approval.notifications.rejected_title'))
+        //     ->body(__('filament-approval::approval.notifications.rejected_body', ['model' => $modelLabel, 'id' => $approvable->getKey()]))
+        //     ->icon(Heroicon::OutlinedXCircle)
+        //     ->danger()
+        //     ->broadcast($recipient)
+        //     ->sendToDatabase($recipient);
     }
 }

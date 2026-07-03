@@ -122,7 +122,7 @@ class ApprovalEngine
             event(new ApprovalRejected($approval));
             $this->fireModelCallback($approval->approvable, 'onApprovalRejected', $approval);
 
-            $this->notifySubmitter($approval, ApprovalRejectedNotification::class);
+            // $this->notifySubmitter($approval, ApprovalRejectedNotification::class);
         });
     }
 
@@ -156,7 +156,7 @@ class ApprovalEngine
                 'metadata' => ['delegated_to' => $toUserId],
             ]);
 
-            ApprovalRequestedNotification::send($stepInstance, $toUserId);
+            // ApprovalRequestedNotification::send($stepInstance, $toUserId);
             $this->fireModelCallback($stepInstance->approval->approvable, 'onApprovalDelegated', $stepInstance, $fromUserId, $toUserId);
         });
     }
@@ -193,7 +193,7 @@ class ApprovalEngine
             event(new ApprovalCompleted($approval));
             $this->fireModelCallback($approval->approvable, 'onApprovalApproved', $approval);
 
-            $this->notifySubmitter($approval, ApprovalApprovedNotification::class);
+            // $this->notifySubmitter($approval, ApprovalApprovedNotification::class);
 
             return;
         }
@@ -212,7 +212,7 @@ class ApprovalEngine
         ]);
 
         foreach ($nextStep->assigned_approver_ids as $userId) {
-            ApprovalRequestedNotification::send($nextStep, $userId);
+            // ApprovalRequestedNotification::send($nextStep, $userId);
         }
     }
 
@@ -229,7 +229,7 @@ class ApprovalEngine
     protected function notifySubmitter(Approval $approval, string $notificationClass): void
     {
         if ($approval->submitted_by) {
-            $notificationClass::send($approval, $approval->submitted_by);
+            // $notificationClass::send($approval, $approval->submitted_by);
         }
     }
 }

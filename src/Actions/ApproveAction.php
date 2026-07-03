@@ -55,10 +55,10 @@ class ApproveAction extends Action
                     $data['comment'] ?? null,
                 );
 
-                Notification::make()
-                    ->title(__('filament-approval::approval.actions.approved_success'))
-                    ->success()
-                    ->send();
+                // Notification::make()
+                //     ->title(__('filament-approval::approval.actions.approved_success'))
+                //     ->success()
+                //     ->send();
             })
             ->requiresConfirmation()
             ->modalHeading(__('filament-approval::approval.actions.approve_heading'));
