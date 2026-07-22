@@ -47,6 +47,11 @@ class ApprovalFlowResource extends Resource
         return FilamentApprovalPlugin::resolveNavigationGroup();
     }
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') || auth()->user()?->hasRole('super_admin');
+    }
+
     public static function form(Schema $schema): Schema
     {
         $resolvers = FilamentApprovalPlugin::resolveApproverResolvers();
