@@ -38,7 +38,20 @@ class CommentAction extends Action
 
                 $stepInstance = $approval->currentStepInstance();
 
-                return $stepInstance && $stepInstance->canUserAct(auth()->id());
+                // Approver assigned to current step
+                if ($stepInstance && $stepInstance->canUserAct(auth()->id())) {
+                    return true;
+                }
+
+                // Submitter / Salesman / Creator can comment while approval is pending
+                $userId = auth()->id();
+                $isSubmitter = $approval->submitted_by === $userId
+                    || ($record->sales_id ?? null) === $userId
+                    || ($record->created_by ?? null) === $userId
+                    || auth()->user()?->hasRole('Super Admin')
+                    || auth()->user()?->hasRole('super_admin');
+
+                return $isSubmitter && $approval->status === \Wezlo\FilamentApproval\Enums\ApprovalStatus::Pending;
             })
             ->schema([
                 Textarea::make('comment')

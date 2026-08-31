@@ -120,6 +120,8 @@ class ApprovalsRelationManager extends RelationManager
                                             ->placeholder(__('filament-approval::approval.relation_manager.system')),
                                         TextEntry::make('comment')
                                             ->label(__('filament-approval::approval.fields.comment'))
+                                            ->formatStateUsing(fn ($state) => $state ? new \Illuminate\Support\HtmlString(nl2br(e($state))) : null)
+                                            ->html()
                                             ->placeholder('-'),
                                         TextEntry::make('created_at')
                                             ->label(__('filament-approval::approval.relation_manager.date'))

@@ -66,7 +66,7 @@ class ApprovalStatusSection
                             ->formatStateUsing(function ($state, $record): string {
                                 $stepInstance = $record->currentApproval()?->currentStepInstance();
 
-                                if (! $stepInstance) {
+                                if (!$stepInstance) {
                                     return '-';
                                 }
 
@@ -81,7 +81,7 @@ class ApprovalStatusSection
                             ->dateTime()
                             ->placeholder(__('filament-approval::approval.infolist.no_sla'))
                             ->color(function ($state) {
-                                if (! $state) {
+                                if (!$state) {
                                     return null;
                                 }
 
@@ -89,7 +89,7 @@ class ApprovalStatusSection
                             }),
                     ])
                     ->columns(3)
-                    ->visible(fn ($record): bool => $record->currentApproval()?->currentStepInstance() !== null),
+                    ->visible(fn($record): bool => $record->currentApproval()?->currentStepInstance() !== null),
 
                 Section::make(__('filament-approval::approval.infolist.recent_activity'))
                     ->schema([
@@ -104,6 +104,8 @@ class ApprovalStatusSection
                                     ->placeholder(__('filament-approval::approval.infolist.system')),
                                 TextEntry::make('comment')
                                     ->label(__('filament-approval::approval.fields.comment'))
+                                    ->formatStateUsing(fn($state) => $state ? new \Illuminate\Support\HtmlString(nl2br(e($state))) : null)
+                                    ->html()
                                     ->placeholder('-'),
                                 TextEntry::make('created_at')
                                     ->label(__('filament-approval::approval.infolist.date'))
@@ -112,10 +114,10 @@ class ApprovalStatusSection
                             ->columns(4),
                     ])
                     ->collapsible()
-                    ->visible(fn ($record): bool => $record->latestApproval()?->actions()->exists() ?? false),
+                    ->visible(fn($record): bool => $record->latestApproval()?->actions()->exists() ?? false),
             ])
             ->columns(3)
             ->collapsible()
-            ->visible(fn ($record): bool => method_exists($record, 'approvals') && $record->latestApproval() !== null);
+            ->visible(fn($record): bool => method_exists($record, 'approvals') && $record->latestApproval() !== null);
     }
 }
