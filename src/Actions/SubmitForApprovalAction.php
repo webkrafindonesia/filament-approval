@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use Wezlo\FilamentApproval\Models\ApprovalFlow;
 use Wezlo\FilamentApproval\Services\ApprovalEngine;
 
@@ -25,8 +26,11 @@ class SubmitForApprovalAction extends Action
             ->label(__('filament-approval::approval.actions.submit'))
             ->icon(Heroicon::OutlinedPaperAirplane)
             ->color('info')
-            ->visible(function (): bool {
-                $record = $this->getRecord();
+            ->visible(function (?Model $record = null): bool {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return false;
+                }
 
                 if (! method_exists($record, 'canBeSubmittedForApproval')) {
                     return false;
@@ -34,8 +38,11 @@ class SubmitForApprovalAction extends Action
 
                 return $record->canBeSubmittedForApproval();
             })
-            ->schema(function (): array {
-                $record = $this->getRecord();
+            ->schema(function (?Model $record = null): array {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return [];
+                }
                 $flows = ApprovalFlow::forModel($record)->get();
 
                 $commentSchema = Textarea::make('comment')

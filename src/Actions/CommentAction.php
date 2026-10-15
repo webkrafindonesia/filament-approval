@@ -6,6 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use Wezlo\FilamentApproval\Services\ApprovalEngine;
 
 class CommentAction extends Action
@@ -23,8 +24,11 @@ class CommentAction extends Action
             ->label(__('filament-approval::approval.actions.comment'))
             ->icon(Heroicon::OutlinedChatBubbleLeftEllipsis)
             ->color('gray')
-            ->visible(function (): bool {
-                $record = $this->getRecord();
+            ->visible(function (?Model $record = null): bool {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return false;
+                }
 
                 if (! method_exists($record, 'currentApproval')) {
                     return false;

@@ -6,6 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use Wezlo\FilamentApproval\Services\ApprovalEngine;
 
 class RejectAction extends Action
@@ -23,8 +24,12 @@ class RejectAction extends Action
             ->label(__('filament-approval::approval.actions.reject'))
             ->icon(Heroicon::OutlinedXCircle)
             ->color('danger')
-            ->visible(function (): bool {
-                $record = $this->getRecord();
+            ->visible(function (?Model $record = null): bool {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return false;
+                }
+
                 $approval = $record->currentApproval();
 
                 if (! $approval) {
@@ -37,8 +42,13 @@ class RejectAction extends Action
                     return false;
                 }
 
-                return $stepInstance->canUserAct(auth()->id())
-                    && ! $stepInstance->hasUserActed(auth()->id());
+                $userId = auth()->id();
+                if (! $userId) {
+                    return false;
+                }
+
+                return $stepInstance->canUserAct($userId)
+                    && ! $stepInstance->hasUserActed($userId);
             })
             ->schema([
                 Textarea::make('comment')
@@ -46,9 +56,15 @@ class RejectAction extends Action
                     ->required()
                     ->rows(3),
             ])
-            ->action(function (array $data): void {
-                $record = $this->getRecord();
-                $stepInstance = $record->currentApproval()->currentStepInstance();
+            ->action(function (array $data, ?Model $record = null): void {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return;
+                }
+                $stepInstance = $record->currentApproval()?->currentStepInstance();
+                if (! $stepInstance) {
+                    return;
+                }
 
                 app(ApprovalEngine::class)->reject(
                     $stepInstance,

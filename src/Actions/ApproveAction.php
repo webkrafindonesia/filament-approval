@@ -6,6 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use Wezlo\FilamentApproval\Services\ApprovalEngine;
 
 class ApproveAction extends Action
@@ -23,8 +24,12 @@ class ApproveAction extends Action
             ->label(__('filament-approval::approval.actions.approve'))
             ->icon(Heroicon::OutlinedCheckCircle)
             ->color('success')
-            ->visible(function (): bool {
-                $record = $this->getRecord();
+            ->visible(function (?Model $record = null): bool {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return false;
+                }
+
                 $approval = $record->currentApproval();
 
                 if (! $approval) {
@@ -37,17 +42,28 @@ class ApproveAction extends Action
                     return false;
                 }
 
-                return $stepInstance->canUserAct(auth()->id())
-                    && ! $stepInstance->hasUserActed(auth()->id());
+                $userId = auth()->id();
+                if (! $userId) {
+                    return false;
+                }
+
+                return $stepInstance->canUserAct($userId)
+                    && ! $stepInstance->hasUserActed($userId);
             })
             ->schema([
                 Textarea::make('comment')
                     ->label(__('filament-approval::approval.actions.comment_optional'))
                     ->rows(3),
             ])
-            ->action(function (array $data): void {
-                $record = $this->getRecord();
-                $stepInstance = $record->currentApproval()->currentStepInstance();
+            ->action(function (array $data, ?Model $record = null): void {
+                $record ??= $this->getRecord();
+                if (! $record) {
+                    return;
+                }
+                $stepInstance = $record->currentApproval()?->currentStepInstance();
+                if (! $stepInstance) {
+                    return;
+                }
 
                 app(ApprovalEngine::class)->approve(
                     $stepInstance,
